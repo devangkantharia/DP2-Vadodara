@@ -22,8 +22,7 @@ DatagramSocket ds;
 // Capture cam;
 
 void setup() {
-  //size(320, 240);
-  size(640, 480);
+  size(320,240);
   kinect2 = new Kinect2(this);
   kinect2.initDepth();
   kinect2.initRegistered();
@@ -33,14 +32,14 @@ void setup() {
   // Setting up the DatagramSocket, requires try/catch
   try {
     ds = new DatagramSocket();
-  } 
-  catch (SocketException e) {
+  } catch (SocketException e) {
     e.printStackTrace();
   }
 }
 
 void draw() {
   int[] rawDepth = kinect2.getRawDepth();
+
 
   for (int i=0; i < rawDepth.length; i++) {
     if (rawDepth[i] >= minDepth && rawDepth[i] <= maxDepth) {
@@ -54,15 +53,7 @@ void draw() {
   opencv.erode();
   opencv.findCannyEdges(20, 75);
   canny = opencv.getSnapshot();
-  
   broadcast(canny);
-  
-  // Image created in this machine can be seen by uncommenting the below line
-  imageMode(CENTER);
-  image(canny, width/2, height/2);
-  //blend(canny, 0, 0, kinect2.depthHeight, kinect2.depthWidth, 0, 0, kinect2.depthHeight, kinect2.depthWidth, OVERLAY);
-
-
 }
 
 
@@ -72,7 +63,7 @@ void draw() {
 void broadcast(PImage img) {
 
   // We need a buffered image to do the JPG encoding
-  BufferedImage bimg = new BufferedImage( img.width, img.height, BufferedImage.TYPE_INT_RGB );
+  BufferedImage bimg = new BufferedImage( img.width,img.height, BufferedImage.TYPE_INT_RGB );
 
   // Transfer pixels from localFrame to the BufferedImage
   img.loadPixels();
@@ -85,8 +76,7 @@ void broadcast(PImage img) {
   // Turn the BufferedImage into a JPG and put it in the BufferedOutputStream
   // Requires try/catch
   try {
-    //ImageIO.write(bimg, "jpg", bos);
-    ImageIO.write(bimg, "png", bos);
+    ImageIO.write(bimg, "jpg", bos);
   } 
   catch (IOException e) {
     e.printStackTrace();
@@ -98,7 +88,7 @@ void broadcast(PImage img) {
   // Send JPEG data as a datagram
   println("Sending datagram with " + packet.length + " bytes");
   try {
-    ds.send(new DatagramPacket(packet, packet.length, InetAddress.getByName("192.168.18.116"), clientPort));
+    ds.send(new DatagramPacket(packet,packet.length, InetAddress.getByName("192.168.18.116"),clientPort));
   } 
   catch (Exception e) {
     e.printStackTrace();
