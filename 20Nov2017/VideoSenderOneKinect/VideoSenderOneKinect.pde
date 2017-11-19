@@ -22,8 +22,8 @@ DatagramSocket ds;
 // Capture cam;
 
 void setup() {
-  //size(320, 240);
-  size(640, 480);
+  //size(640, 480);
+  size(1280, 800);
   kinect2 = new Kinect2(this);
   kinect2.initDepth();
   kinect2.initRegistered();
@@ -44,9 +44,9 @@ void draw() {
 
   for (int i=0; i < rawDepth.length; i++) {
     if (rawDepth[i] >= minDepth && rawDepth[i] <= maxDepth) {
-      depthImg.pixels[i] = color(0);
-    } else {
       depthImg.pixels[i] = color(255);
+    } else {
+      depthImg.pixels[i] = color(0);
     }
   }
   depthImg.updatePixels();
@@ -57,12 +57,13 @@ void draw() {
   
   broadcast(canny);
   
-  // Image created in this machine can be seen by uncommenting the below line
-  imageMode(CENTER);
-  image(canny, width/2, height/2);
+  // Image created in this machine can be seen by uncommenting the below 2 line  
+  //image(canny, width/2, height/2);
   //blend(canny, 0, 0, kinect2.depthHeight, kinect2.depthWidth, 0, 0, kinect2.depthHeight, kinect2.depthWidth, OVERLAY);
+  //println(canny.width, canny.height);
 
-
+  background(loadImage("SilhoutteBanyanTree1.png"));
+  image(canny, 100, 400);
 }
 
 
@@ -79,8 +80,8 @@ void broadcast(PImage img) {
   bimg.setRGB( 0, 0, img.width, img.height, img.pixels, 0, img.width);
 
   // Need these output streams to get image as bytes for UDP communication
-  ByteArrayOutputStream baStream	= new ByteArrayOutputStream();
-  BufferedOutputStream bos		= new BufferedOutputStream(baStream);
+  ByteArrayOutputStream baStream  = new ByteArrayOutputStream();
+  BufferedOutputStream bos    = new BufferedOutputStream(baStream);
 
   // Turn the BufferedImage into a JPG and put it in the BufferedOutputStream
   // Requires try/catch
