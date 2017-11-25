@@ -7,29 +7,29 @@ import java.awt.image.*;
 import javax.imageio.*;
 
 PImage video;
-ReceiverThread[] thread;
+ReceiverThread thread1, thread2;
 
 
 void setup() {
   size(1400, 500);
   //fullScreen(2);
   video = createImage(512, 424, RGB);
-  thread[0] = new ReceiverThread(video.width, video.height, 9100);
-  thread[1] = new ReceiverThread(video.width, video.height, 9101);
-  thread[0].start();
-  thread[1].start();
+  thread1 = new ReceiverThread(video.width, video.height, 9100);
+  thread2 = new ReceiverThread(video.width, video.height, 9101);
+  thread1.start();
+  thread2.start();
   
   background(0);
 }
 
 void draw() {
-  if (thread[0].available()) {
-    video = thread[0].getImage();
+  if (thread1.available()) {
+    video = thread1.getImage();
     image(video, 100, 100);
     image(video, 800, 100);
   }
-  if (thread[1].available()) {
-    video = thread[1].getImage();
+  if (thread2.available()) {
+    video = thread2.getImage();
     image(video, 100, 100);
     image(video, 800, 100);
   }

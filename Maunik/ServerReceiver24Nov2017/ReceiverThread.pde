@@ -21,7 +21,7 @@ class ReceiverThread extends Thread {
   // int sender = 0;
 
   ReceiverThread (int w, int h, int p) {
-	port = p;
+	  port = p;
     img = createImage(w, h, RGB);
 
     running = false;
