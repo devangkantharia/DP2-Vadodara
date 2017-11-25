@@ -14,6 +14,8 @@ PImage depthImg;
 int minDepth =  500;
 int maxDepth =  2600;
 
+PImage bgImage;
+
 // This is the port we are sending to
 int clientPort = 9100; 
 // This is our object that sends UDP out
@@ -23,7 +25,8 @@ DatagramSocket ds;
 
 void setup() {
   //size(640, 480);
-  size(1280, 800);
+  //size(1280, 800);
+  fullScreen();
   kinect2 = new Kinect2(this);
   kinect2.initDepth();
   kinect2.initRegistered();
@@ -37,6 +40,7 @@ void setup() {
   catch (SocketException e) {
     e.printStackTrace();
   }
+  background(0);
 }
 
 void draw() {
@@ -62,8 +66,12 @@ void draw() {
   //blend(canny, 0, 0, kinect2.depthHeight, kinect2.depthWidth, 0, 0, kinect2.depthHeight, kinect2.depthWidth, OVERLAY);
   //println(canny.width, canny.height);
 
-  background(loadImage("SilhoutteBanyanTree1.png"));
-  image(canny, 100, 400);
+  //background(loadImage("SilhoutteBanyanTree1.png"));
+  bgImage = loadImage("SilhoutteBanyanTree4.jpg");
+  image(bgImage, 0, 0);
+  canny.resize(0, 300);
+  image(canny, 180, 380);
+  //bgImage = loadImage("SilhoutteBanyanTree1.png");
 }
 
 
@@ -100,6 +108,7 @@ void broadcast(PImage img) {
   println("Sending datagram with " + packet.length + " bytes");
   try {
     ds.send(new DatagramPacket(packet, packet.length, InetAddress.getByName("192.168.18.116"), clientPort));
+    //ds.send(new DatagramPacket(packet, packet.length, InetAddress.getByName("192.168.0.2"), clientPort));
   } 
   catch (Exception e) {
     e.printStackTrace();
