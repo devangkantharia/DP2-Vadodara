@@ -5,9 +5,8 @@
 import java.net.*;
 import java.io.*;
 class ReceiverThread extends Thread {
-
   // Port we are receiving.
-  int port = 9100; 
+  int port;
   DatagramSocket ds; 
   // A byte array to read into (max size of 65536, could be smaller)
   byte[] buffer = new byte[65536]; 
@@ -18,10 +17,11 @@ class ReceiverThread extends Thread {
   // Start with something 
   PImage img;
 
-  InetAddress ip, ip1;
-  int sender = 0;
+  // InetAddress ip, ip1;
+  // int sender = 0;
 
-  ReceiverThread (int w, int h) {
+  ReceiverThread (int w, int h, int p) {
+	port = p;
     img = createImage(w, h, RGB);
 
     running = false;
@@ -39,7 +39,7 @@ class ReceiverThread extends Thread {
     // We set available equal to false now that we've gotten the data
     available = false;
     
-    if (ip1 == null) {
+    /*if (ip1 == null) {
       ip1 = ip;
       sender = 1;
     } 
@@ -50,7 +50,7 @@ class ReceiverThread extends Thread {
       else{
         sender = 2;
       }
-    }
+    }*/
     
     return img;
   }
@@ -84,10 +84,10 @@ class ReceiverThread extends Thread {
     } 
     byte[] data = p.getData();
 
-    ip = p.getAddress();
+    // ip = p.getAddress();
     //println("datagram address " +  ip);
 
-    if (ip1 == null) {
+    /*if (ip1 == null) {
       ip1 = ip;
       sender = 1;
     } 
@@ -98,9 +98,9 @@ class ReceiverThread extends Thread {
       else{
         sender = 2;
       }
-    }
+    }*/
 
-    println("sender :  " +  sender + " : " + ip);
+    // println("sender :  " +  sender + " : " + ip);
 
     //println("Received datagram with " + data.length + " bytes." );
 
