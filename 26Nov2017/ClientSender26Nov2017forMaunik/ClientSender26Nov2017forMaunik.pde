@@ -84,7 +84,7 @@ void draw() {
   /* New Server Data Receiving Pattern - Start */
   if (NewServerThread.available()) {
     println("Received other's data from server");
-    NewServerData = NewServerThread.getImage22();
+    NewServerData = NewServerThread.getImage();
     image(NewServerData, 0, 0);
   //  //image(video, 800, 100);
   }
@@ -107,8 +107,8 @@ void broadcast(PImage img) {
   bimg.setRGB( 0, 0, img.width, img.height, img.pixels, 0, img.width);
 
   // Need these output streams to get image as bytes for UDP communication
-  ByteArrayOutputStream baStream	= new ByteArrayOutputStream();
-  BufferedOutputStream bos		= new BufferedOutputStream(baStream);
+  ByteArrayOutputStream baStream  = new ByteArrayOutputStream();
+  BufferedOutputStream bos    = new BufferedOutputStream(baStream);
 
   // Turn the BufferedImage into a JPG and put it in the BufferedOutputStream
   // Requires try/catch

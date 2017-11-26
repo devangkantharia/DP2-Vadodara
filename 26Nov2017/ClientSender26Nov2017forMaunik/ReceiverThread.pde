@@ -6,38 +6,39 @@ import java.net.*;
 import java.io.*;
 class ReceiverThread extends Thread {
   // Port we are receiving.
-  int port22;
-  DatagramSocket ds22; 
+  int port;
+  DatagramSocket ds; 
   // A byte array to read into (max size of 65536, could be smaller)
-  byte[] buffer22 = new byte[65536]; 
+  //byte[] buffer = new byte[65536];
+  byte[] buffer = new byte[131072];
 
-  boolean running22;    // Is the thread running?  Yes or no?
-  boolean available22;  // Are there new tweets available?
+  boolean running;    // Is the thread running?  Yes or no?
+  boolean available;  // Are there new tweets available?
 
   // Start with something 
-  PImage img22;
+  PImage img;
 
   // InetAddress ip, ip1;
   // int sender = 0;
 
   ReceiverThread (int w, int h, int p) {
-    port22 = p;
-    img22 = createImage(w, h, RGB);
+    port = p;
+    img = createImage(w, h, RGB);
 
-    running22 = false;
-    available22 = true; // We start with "loading . . " being available
+    running = false;
+    available = true; // We start with "loading . . " being available
 
     try {
-      ds22 = new DatagramSocket(port22);
+      ds = new DatagramSocket(port);
     } 
     catch (SocketException e) {
       e.printStackTrace();
     }
   }
 
-  PImage getImage22() {
+  PImage getImage() {
     // We set available equal to false now that we've gotten the data
-    available22 = false;
+    available = false;
 
     /*if (ip1 == null) {
      ip1 = ip;
@@ -52,37 +53,37 @@ class ReceiverThread extends Thread {
      }
      }*/
 
-    return img22;
+    return img;
   }
 
   boolean available() {
-    return available22;
+    return available;
   }
 
   // Overriding "start()"
   void start () {
-    running22 = true;
+    running = true;
     super.start();
   }
 
   // We must implement run, this gets triggered by start()
   void run () {
-    while (running22) {
-      checkForImage22();
+    while (running) {
+      checkForImage();
       // New data is available!
-      available22 = true;
+      available = true;
     }
   }
 
-  void checkForImage22() {
-    DatagramPacket p22 = new DatagramPacket(buffer22, buffer22.length); 
+  void checkForImage() {
+    DatagramPacket p = new DatagramPacket(buffer, buffer.length); 
     try {
-      ds22.receive(p22);
+      ds.receive(p);
     } 
     catch (IOException e) {
       e.printStackTrace();
     } 
-    byte[] data22 = p22.getData();
+    byte[] data = p.getData();
 
     // ip = p.getAddress();
     //println("datagram address " +  ip);
@@ -105,28 +106,28 @@ class ReceiverThread extends Thread {
     //println("Received datagram with " + data.length + " bytes." );
 
     // Read incoming data into a ByteArrayInputStream
-    ByteArrayInputStream bais = new ByteArrayInputStream( data22 );
+    ByteArrayInputStream bais = new ByteArrayInputStream( data );
 
     // We need to unpack JPG and put it in the PImage img
-    img22.loadPixels();
+    img.loadPixels();
     try {
       // Make a BufferedImage out of the incoming bytes
       BufferedImage bimg = ImageIO.read(bais);
       // Put the pixels into the PImage
-      bimg.getRGB(0, 0, img22.width, img22.height, img22.pixels, 0, img22.width);
+      bimg.getRGB(0, 0, img.width, img.height, img.pixels, 0, img.width);
     } 
     catch (Exception e) {
       e.printStackTrace();
     }
     // Update the PImage pixels
-    img22.updatePixels();
+    img.updatePixels();
   }
 
 
   // Our method that quits the thread
   void quit() {
     System.out.println("Quitting."); 
-    running22 = false;  // Setting running to false ends the loop in run()
+    running = false;  // Setting running to false ends the loop in run()
     // In case the thread is waiting. . .
     interrupt();
   }
